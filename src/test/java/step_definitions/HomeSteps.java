@@ -7,15 +7,21 @@ import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import pages.CodingPage;
 import pages.HomePage;
+import pages.SoftSkillPage;
 import utils.BrowserUtils;
 
 import java.util.List;
 
 public class HomeSteps {
+    CodingPage codingPage;
+    SoftSkillPage softSkillPage;
     HomePage page;
 
     public HomeSteps() {
+        softSkillPage = new SoftSkillPage();
+        codingPage = new CodingPage();
         page = new HomePage();
     }
 
@@ -122,6 +128,12 @@ public class HomeSteps {
     @When("I click a button {string}")
     public void iClickAButtonString(String homeBtn) {
         switch (homeBtn) {
+            case "Sign out":
+                BrowserUtils.click(page.signOutBtn);
+                break;
+            case "Manage Access":
+                BrowserUtils.click(page.manageAccessBtn);
+                break;
             case "addDoBtn":
                 BrowserUtils.click(page.addDoBtn);
                 break;
@@ -144,7 +156,7 @@ public class HomeSteps {
                 BrowserUtils.click(page.softSkillsBtn);
                 break;
             case "enter":
-                BrowserUtils.click(page.enterBtnP);
+                BrowserUtils.click(codingPage.enterBtnP);
                 break;
             default:
 
@@ -166,8 +178,8 @@ public class HomeSteps {
     @And("I fill out new question {string} in page {string}")
     public void iFillOutNewQuestionInPage(String question, String dashboard) {
         switch (dashboard) {
-            case "Coding" -> BrowserUtils.sendKeys(page.newQuestionField, question);
-            case "Soft Skill" -> BrowserUtils.sendKeys(page.newQuestionSoftSkillField, question);
+            case "Coding" -> BrowserUtils.sendKeys(codingPage.newQuestionField, question);
+            case "Soft Skill" -> BrowserUtils.sendKeys(softSkillPage.newQuestionSoftSkillField, question);
             default -> System.out.println("Invalid button");
         }
     }
@@ -195,16 +207,6 @@ public class HomeSteps {
     public void i_add_new_dashboard(String newDashboardText) {
         BrowserUtils.sendKeys(page.newDashboardField, newDashboardText);
         BrowserUtils.click(page.newDashboardAddBtn);
-    }
-
-    @And("I click a button {string}")
-    public void iClickAButton(String btn) {
-        switch (btn) {
-            case "Sign out" -> BrowserUtils.click(page.signOutBtn);
-            case "Manage Access" -> {
-                BrowserUtils.click(page.manageAccessBtn);
-            }
-        }
     }
 
     @Then("Verify dashboard {string} is displayed")

@@ -34,12 +34,10 @@ public class HomePage {
     public WebElement enterBtn;
     @FindBy(xpath = "//button[@class='btn btn-warning badge-pill newbtn']")
     public WebElement enterNewQuestionBtn;
-    @FindBy(xpath = "//textarea[@id='question']")
-    public WebElement newQuestionField;
+
     @FindBy(xpath = "//button[text()='Enter new question ']")
     public WebElement enterQuestionBtn;
-    @FindBy(xpath = "//input[@name='question']")
-    public WebElement newQuestionSoftSkillField;
+
     @FindBy(xpath = "//button[text()='Enter']")
     public WebElement enterBtnP;
     @FindBy(xpath = "//a//p")
