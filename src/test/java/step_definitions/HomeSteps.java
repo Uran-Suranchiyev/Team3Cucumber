@@ -7,20 +7,26 @@ import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import pages.CodingPage;
 import pages.HomePage;
+import pages.SoftSkillPage;
 import utils.BrowserUtils;
 
 import java.util.List;
 
 public class HomeSteps {
+    CodingPage codingPage;
+    SoftSkillPage softSkillPage;
     HomePage page;
 
     public HomeSteps() {
+        softSkillPage = new SoftSkillPage();
+        codingPage = new CodingPage();
         page = new HomePage();
     }
 
-    @Given("I logIn as user {string} with password {string}")
-    public void iLogInAsUserWithPassword(String username, String password) {
+    @Given("I logIn as {string} with password {string}")
+    public void iLogInAsWithPassword(String username, String password) {
         BrowserUtils.sendKeys(page.userNameField, username);
         BrowserUtils.sendKeys(page.passwordField, password);
         BrowserUtils.click(page.loginBtn);
@@ -58,7 +64,7 @@ public class HomeSteps {
             return false;
         int len = s.length();
         for (int i = 0; i < len; i++) {
-            if ((Character.isLetterOrDigit(s.charAt(i)) == false)) {
+            if ((!Character.isLetterOrDigit(s.charAt(i)))) {
                 return false;
             }
             page.yourInputDo.sendKeys(s);
@@ -122,6 +128,12 @@ public class HomeSteps {
     @When("I click a button {string}")
     public void iClickAButtonString(String homeBtn) {
         switch (homeBtn) {
+            case "Sign out":
+                BrowserUtils.click(page.signOutBtn);
+                break;
+            case "Manage Access":
+                BrowserUtils.click(page.manageAccessBtn);
+                break;
             case "addDoBtn":
                 BrowserUtils.click(page.addDoBtn);
                 break;
@@ -144,7 +156,7 @@ public class HomeSteps {
                 BrowserUtils.click(page.softSkillsBtn);
                 break;
             case "enter":
-                BrowserUtils.click(page.enterBtnP);
+                BrowserUtils.click(codingPage.enterBtnP);
                 break;
             default:
 
@@ -166,8 +178,8 @@ public class HomeSteps {
     @And("I fill out new question {string} in page {string}")
     public void iFillOutNewQuestionInPage(String question, String dashboard) {
         switch (dashboard) {
-            case "Coding" -> BrowserUtils.sendKeys(page.newQuestionField, question);
-            case "Soft Skill" -> BrowserUtils.sendKeys(page.newQuestionSoftSkillField, question);
+            case "Coding" -> BrowserUtils.sendKeys(codingPage.newQuestionField, question);
+            case "Soft Skill" -> BrowserUtils.sendKeys(softSkillPage.newQuestionSoftSkillField, question);
             default -> System.out.println("Invalid button");
         }
     }
@@ -185,4 +197,98 @@ public class HomeSteps {
     String actual = page.headerTitle.getText();
     BrowserUtils.assertEquals(actual,title);
     }
+
+    @Then("Verify {string} button is visible")
+    public void verifyButtonIsVisible(String btn) {
+        BrowserUtils.isEnabled(page.manageAccessBtn);
+    }
+
+    @When("I add new dashboard {string}")
+    public void i_add_new_dashboard(String newDashboardText) {
+        BrowserUtils.sendKeys(page.newDashboardField, newDashboardText);
+        BrowserUtils.click(page.newDashboardAddBtn);
+    }
+
+    @Then("Verify dashboard {string} is displayed")
+    public void verifyDashboardIsDisplayed(String newDashboardtext) {
+        WebElement newDashboard = BrowserUtils.getDriver().findElement(By.xpath("//button[text()='" + newDashboardtext + "']"));
+        BrowserUtils.isDisplayed(newDashboard);
+    }
+
+
+    @When("I click a button {string} in section {string}")
+    public void iClickAButtonInSection(String btn, String section) {
+        switch (section) {
+            case "Do" -> {
+                if (btn.equals("edit")) {
+                    BrowserUtils.click(page.firstDoEditBtn);
+                } else if (btn.equals("delete")) {
+                    BrowserUtils.click(page.firstDoDeleteBtn);
+                }
+            }
+            case "Don't" -> {
+                if (btn.equals("edit")) {
+                    BrowserUtils.click(page.firstDontEditBtn);
+                } else if (btn.equals("delete")) {
+                    BrowserUtils.click(page.firstDontDeleteBtn);
+                }
+            }
+        }
+    }
+
+
+    @And("add to item text {string} in section {string}")
+    public void addToItemTextInSection(String text, String section) {
+        switch (section) {
+            case "Do" -> {
+                BrowserUtils.sendKeys(page.firstDoEditField, text);
+                BrowserUtils.click(page.editDoAcceptBtn);
+            }
+            case "Don't" -> {
+                BrowserUtils.sendKeys(page.firstDontEditField, text);
+                BrowserUtils.click(page.editDontAcceptBtn);
+            }
+        }
+    }
+
+    @Then("Verify item contain text {string} in section {string}")
+    public void verifyItemIsDisplayed(String text, String section) {
+
+        switch (section) {
+            case "Do" -> {
+                WebElement textResult = BrowserUtils.getDriver().findElement(
+                        By.xpath("//div[@class='anyClass']//div[contains(text(), '" + text + "')]"));
+                BrowserUtils.isDisplayed(textResult);
+            }
+            case "Don't" -> {
+                WebElement textResult = BrowserUtils.getDriver().findElement(
+                        By.xpath("//div[@class=' col-md-6']//div[contains(text(), '" + text + "')]"));
+                BrowserUtils.isDisplayed(textResult);
+            }
+        }
+    }
+
+    @Then("Verify item which contain text {string} is deleted in section {string}")
+    public void verifyItemWhichContainTextIsDeleted(String containText, String section) {
+
+        switch (section) {
+            case "Do" -> {
+                WebElement textResult = BrowserUtils.getDriver().findElement(
+                        By.xpath("//div[@class='anyClass']//div[contains(text(), '" + containText + "')]"));
+                if (BrowserUtils.isDisabled(textResult)) {
+                    Assert.fail();
+                } else BrowserUtils.assertTrue(true);
+            }
+            case "Don't" -> {
+                WebElement textResult = BrowserUtils.getDriver().findElement(
+                        By.xpath("//div[@class=' col-md-6']//div[contains(text(), '" + containText + "')]"));
+                if (BrowserUtils.isDisabled(textResult)) {
+                    Assert.fail();
+                } else BrowserUtils.assertTrue(true);
+            }
+        }
+
+    }
+
+
 }
