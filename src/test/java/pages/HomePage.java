@@ -78,4 +78,3 @@ public class HomePage {
     public WebElement firstDontEditField;
     @FindBy(xpath = "//button[@class='btn btn-sm-outline-success']")
     public WebElement editDontAcceptBtn;
-}

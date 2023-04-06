@@ -1,10 +1,12 @@
 @HomeScenarios
 Feature: Homepage scenarios
 
+
   @USIN1
   Scenario: Title of the page should be "Interview App"
     Given I logIn as "test@yahoo.com" with password "test123"
     Then Verify title is displayed "Interview App"
+
 
   @USIN2
   Scenario: When I sign in as a user, I should be able to see only "Sign out" button from nav bar.
